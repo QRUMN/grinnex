@@ -1,10 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Onboarding from '../views/Onboarding.vue';
+import Login from '../views/auth/Login.vue';
 
 const routes = [
   {
     path: '/',
-    redirect: '/onboarding'
+    redirect: '/login'
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: '/onboarding',
@@ -12,6 +21,14 @@ const routes = [
     component: Onboarding,
     meta: {
       requiresAuth: false
+    }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/Dashboard.vue'),
+    meta: {
+      requiresAuth: true
     }
   }
 ];
@@ -27,7 +44,9 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem('token'); // You might want to use a more sophisticated auth check
 
   if (requiresAuth && !isAuthenticated) {
-    next('/onboarding');
+    next('/login');
+  } else if (to.path === '/login' && isAuthenticated) {
+    next('/dashboard');
   } else {
     next();
   }
