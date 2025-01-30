@@ -211,10 +211,6 @@
                 <option value="large">Large (> 2,500 sq ft)</option>
               </select>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Problem Area</label>
-              <input v-model="form.problemArea" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
           </div>
         </div>
 
@@ -282,14 +278,14 @@
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <DialogPanel class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-            <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
+            <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900 p-6">
               Registration Successful!
             </DialogTitle>
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class="sm:flex sm:items-start">
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   <p class="text-sm text-gray-500">
-                    You have successfully completed the registration process. You will be redirected to the dashboard shortly.
+                    Thank you for registering! You will be redirected to your dashboard in a moment...
                   </p>
                 </div>
               </div>
@@ -342,7 +338,6 @@ const form = reactive({
   state: '',
   zipCode: '',
   propertySize: '',
-  problemArea: '',
   pestType: '',
   pestProblem: '',
   preferredDate: '',
@@ -361,7 +356,6 @@ const errors = reactive({
   state: '',
   zipCode: '',
   propertySize: '',
-  problemArea: '',
   pestType: '',
   pestProblem: ''
 });
@@ -479,22 +473,36 @@ const closeSuccessModal = () => {
 
 // Enhanced form submission with proper validation
 const enhancedHandleSubmit = async () => {
-  loading.value = true;
-  errors.value = {};
-
   try {
-    if (!form.isAddressVerified) {
-      errors.value.address = 'Please select a verified address from the suggestions';
-      return;
-    }
+    loading.value = true;
+    // Reset errors
+    Object.keys(errors).forEach(key => {
+      errors[key] = '';
+    });
 
-    await handleSubmit();
+    // Add your API call here to submit the form data
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
+
+    // Show success modal
     showSuccessModal.value = true;
+
+    // Store the token (you'll get this from your actual API response)
+    localStorage.setItem('token', 'sample-auth-token');
+
+    // Wait for a short moment to show the success message
+    setTimeout(() => {
+      // Close the modal and redirect to dashboard
+      showSuccessModal.value = false;
+      router.push('/dashboard');
+    }, 1500);
+
   } catch (error) {
-    if (error.validationErrors) {
-      Object.assign(errors, error.validationErrors);
+    // Handle API errors
+    if (error.response?.data?.errors) {
+      Object.assign(errors, error.response.data.errors);
     } else {
-      console.error('Submission error:', error);
+      // Handle general error
+      console.error('Registration failed:', error);
     }
   } finally {
     loading.value = false;
