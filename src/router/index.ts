@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Onboarding from '../views/Onboarding.vue';
 import Login from '../views/auth/Login.vue';
+import BusinessOnboarding from '../views/auth/BusinessOnboarding.vue';
 
 const routes = [
   {
@@ -19,6 +20,14 @@ const routes = [
     path: '/onboarding',
     name: 'Onboarding',
     component: Onboarding,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/auth/business-onboarding',
+    name: 'BusinessOnboarding',
+    component: BusinessOnboarding,
     meta: {
       requiresAuth: false
     }

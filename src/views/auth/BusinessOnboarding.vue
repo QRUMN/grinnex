@@ -3,22 +3,41 @@
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img class="mx-auto h-12 w-auto" src="/logo.svg" alt="Grinnage Extermination" />
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign in to your account
+        Create Your Business Account
       </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Join our network of pest control professionals
+      </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
+            <label for="businessName" class="block text-sm font-medium text-gray-700">
+              Business Name
+            </label>
+            <div class="mt-1">
+              <input
+                id="businessName"
+                v-model="form.businessName"
+                type="text"
+                required
+                :class="{'border-red-500': errors.businessName}"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <p v-if="errors.businessName" class="mt-1 text-sm text-red-600">{{ errors.businessName }}</p>
+            </div>
+          </div>
+
+          <div>
             <label for="email" class="block text-sm font-medium text-gray-700">
-              Email address
+              Business Email
             </label>
             <div class="mt-1">
               <input
                 id="email"
                 v-model="form.email"
-                name="email"
                 type="email"
                 autocomplete="email"
                 required
@@ -26,6 +45,23 @@
                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700">
+              Business Phone
+            </label>
+            <div class="mt-1">
+              <input
+                id="phone"
+                v-model="form.phone"
+                type="tel"
+                required
+                :class="{'border-red-500': errors.phone}"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <p v-if="errors.phone" class="mt-1 text-sm text-red-600">{{ errors.phone }}</p>
             </div>
           </div>
 
@@ -38,8 +74,6 @@
                 id="password"
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
-                name="password"
-                autocomplete="current-password"
                 required
                 :class="{'border-red-500': errors.password}"
                 class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pr-10"
@@ -51,27 +85,6 @@
                 <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
               </button>
               <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                v-model="form.rememberMe"
-                name="remember-me"
-                type="checkbox"
-                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-
-            <div class="text-sm">
-              <router-link to="/auth/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
-              </router-link>
             </div>
           </div>
 
@@ -87,7 +100,7 @@
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               </span>
-              Sign in
+              Create Business Account
             </button>
           </div>
         </form>
@@ -99,23 +112,17 @@
             </div>
             <div class="relative flex justify-center text-sm">
               <span class="px-2 bg-white text-gray-500">
-                Don't have an account?
+                Or
               </span>
             </div>
           </div>
 
-          <div class="mt-6 grid grid-cols-2 gap-3">
+          <div class="mt-6 text-center">
             <router-link
               to="/onboarding"
-              class="w-full inline-flex justify-center py-2 px-4 border border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="font-medium text-indigo-600 hover:text-indigo-500"
             >
-              Personal Account
-            </router-link>
-            <router-link
-              to="/auth/business-onboarding"
-              class="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Business Account
+              Looking for personal account? Click here
             </router-link>
           </div>
         </div>
@@ -133,13 +140,16 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const form = reactive({
+  businessName: '',
   email: '',
-  password: '',
-  rememberMe: false
+  phone: '',
+  password: ''
 });
 
 const errors = reactive({
+  businessName: '',
   email: '',
+  phone: '',
   password: ''
 });
 
@@ -149,18 +159,18 @@ const togglePassword = () => {
 
 const handleSubmit = async () => {
   loading.value = true;
-  errors.email = '';
-  errors.password = '';
+  // Reset errors
+  Object.keys(errors).forEach(key => errors[key] = '');
 
   try {
-    // Add your authentication logic here
+    // Add your business account creation logic here
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
     router.push('/dashboard');
   } catch (error) {
     if (error.response?.data?.errors) {
       Object.assign(errors, error.response.data.errors);
     } else {
-      errors.email = 'Invalid email or password';
+      errors.email = 'An error occurred while creating your account';
     }
   } finally {
     loading.value = false;
