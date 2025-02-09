@@ -5,6 +5,15 @@
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         Sign in to your account
       </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Or
+        <router-link
+          to="/onboarding"
+          class="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          schedule a free inspection
+        </router-link>
+      </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -106,10 +115,10 @@
 
           <div class="mt-6 grid grid-cols-2 gap-3">
             <router-link
-              to="/onboarding"
+              to="/auth/create-account"
               class="w-full inline-flex justify-center py-2 px-4 border border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Personal Account
+              Get Started
             </router-link>
             <router-link
               to="/auth/business-onboarding"
