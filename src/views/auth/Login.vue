@@ -1,15 +1,25 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <img class="mx-auto h-12 w-auto" src="/logo.svg" alt="Grinnage Extermination" />
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <router-link to="/" class="flex items-center text-gray-300 hover:text-gray-100 mb-8">
+        <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back
+      </router-link>
+      <div class="flex justify-center mb-8">
+        <svg class="h-12 w-12 text-emerald-400" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+        </svg>
+      </div>
+      <h2 class="text-center text-3xl font-bold text-white">
         Sign in to your account
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <p class="mt-2 text-center text-sm text-gray-400">
         Or
         <router-link
           to="/onboarding"
-          class="font-medium text-indigo-600 hover:text-indigo-500"
+          class="font-medium text-emerald-400 hover:text-emerald-300"
         >
           schedule a free inspection
         </router-link>
@@ -17,10 +27,48 @@
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div class="mb-6">
+          <div class="flex justify-center space-x-4">
+            <button
+              @click="accountType = 'residential'"
+              :class="[
+                'px-4 py-2 rounded-md text-sm font-medium',
+                accountType === 'residential'
+                  ? 'bg-emerald-400 text-white'
+                  : 'text-gray-300 hover:text-white'
+              ]"
+            >
+              Residential
+            </button>
+            <button
+              @click="accountType = 'commercial'"
+              :class="[
+                'px-4 py-2 rounded-md text-sm font-medium',
+                accountType === 'commercial'
+                  ? 'bg-emerald-400 text-white'
+                  : 'text-gray-300 hover:text-white'
+              ]"
+            >
+              Commercial
+            </button>
+            <button
+              @click="accountType = 'admin'"
+              :class="[
+                'px-4 py-2 rounded-md text-sm font-medium',
+                accountType === 'admin'
+                  ? 'bg-emerald-400 text-white'
+                  : 'text-gray-300 hover:text-white'
+              ]"
+            >
+              Admin
+            </button>
+          </div>
+        </div>
+
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
+            <label for="email" class="block text-sm font-medium text-gray-300">
               Email address
             </label>
             <div class="mt-1">
@@ -32,55 +80,27 @@
                 autocomplete="email"
                 required
                 :class="{'border-red-500': errors.email}"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                class="appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm"
               />
-              <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+              <p v-if="errors.email" class="mt-1 text-sm text-red-400">{{ errors.email }}</p>
             </div>
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
+            <label for="password" class="block text-sm font-medium text-gray-300">
               Password
             </label>
-            <div class="mt-1 relative">
+            <div class="mt-1">
               <input
                 id="password"
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
                 name="password"
-                autocomplete="current-password"
                 required
                 :class="{'border-red-500': errors.password}"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pr-10"
+                class="appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 sm:text-sm"
               />
-              <button 
-                type="button"
-                @click="togglePassword"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-              </button>
-              <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <input
-                id="remember-me"
-                v-model="form.rememberMe"
-                name="remember-me"
-                type="checkbox"
-                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-
-            <div class="text-sm">
-              <router-link to="/auth/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
-              </router-link>
+              <p v-if="errors.password" class="mt-1 text-sm text-red-400">{{ errors.password }}</p>
             </div>
           </div>
 
@@ -88,7 +108,7 @@
             <button
               type="submit"
               :disabled="loading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-400 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 disabled:opacity-50"
             >
               <span v-if="loading" class="mr-2">
                 <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -101,32 +121,13 @@
           </div>
         </form>
 
-        <div class="mt-6">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">
-                Don't have an account?
-              </span>
-            </div>
-          </div>
-
-          <div class="mt-6 grid grid-cols-2 gap-3">
-            <router-link
-              to="/auth/create-account"
-              class="w-full inline-flex justify-center py-2 px-4 border border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Get Started
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-400">
+            Don't have an account?{' '}
+            <router-link to="/auth/create-account" class="font-medium text-emerald-400 hover:text-emerald-300">
+              Get started
             </router-link>
-            <router-link
-              to="/auth/business-onboarding"
-              class="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Business Account
-            </router-link>
-          </div>
+          </p>
         </div>
       </div>
     </div>
@@ -140,21 +141,17 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const loading = ref(false);
 const showPassword = ref(false);
+const accountType = ref('residential');
 
 const form = reactive({
   email: '',
   password: '',
-  rememberMe: false
 });
 
 const errors = reactive({
   email: '',
   password: ''
 });
-
-const togglePassword = () => {
-  showPassword.value = !showPassword.value;
-};
 
 const handleSubmit = async () => {
   loading.value = true;
