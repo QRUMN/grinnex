@@ -3,6 +3,8 @@ import Onboarding from '../views/Onboarding.vue';
 import Login from '../views/auth/Login.vue';
 import BusinessOnboarding from '../views/auth/BusinessOnboarding.vue';
 import CreateAccount from '../views/auth/CreateAccount.vue';
+import AdminLogin from '../views/admin/AdminLogin.vue';
+import AdminDashboard from '../views/admin/AdminDashboard.vue';
 
 const routes = [
   {
@@ -42,6 +44,23 @@ const routes = [
     }
   },
   {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: AdminLogin,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/admin/dashboard',
+    name: 'AdminDashboard',
+    component: AdminDashboard,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true
+    }
+  },
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
@@ -59,11 +78,15 @@ const router = createRouter({
 // Navigation guard
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = localStorage.getItem('token'); // You might want to use a more sophisticated auth check
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+  const isAuthenticated = localStorage.getItem('token');
+  const isAdmin = localStorage.getItem('adminToken');
 
-  if (requiresAuth && !isAuthenticated) {
+  if (requiresAdmin && !isAdmin) {
+    next('/admin/login');
+  } else if (requiresAuth && !isAuthenticated && !isAdmin) {
     next('/login');
-  } else if (to.path === '/login' && isAuthenticated) {
+  } else if ((to.path === '/login' && isAuthenticated) || (to.path === '/admin/login' && isAdmin)) {
     next('/dashboard');
   } else {
     next();

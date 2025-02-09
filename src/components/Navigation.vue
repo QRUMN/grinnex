@@ -19,7 +19,7 @@
               to="/login"
               class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               :class="{ 'border-indigo-500 text-gray-900': $route.path === '/login' }"
-              v-if="!isAuthenticated"
+              v-if="!isAuthenticated && !isAdmin"
             >
               Login
             </router-link>
@@ -27,7 +27,7 @@
               to="/auth/create-account"
               class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               :class="{ 'border-indigo-500 text-gray-900': $route.path === '/auth/create-account' }"
-              v-if="!isAuthenticated"
+              v-if="!isAuthenticated && !isAdmin"
             >
               Create Account
             </router-link>
@@ -39,12 +39,28 @@
             >
               Dashboard
             </router-link>
+            <router-link
+              to="/admin/dashboard"
+              class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              :class="{ 'border-indigo-500 text-gray-900': $route.path === '/admin/dashboard' }"
+              v-if="isAdmin"
+            >
+              Admin Dashboard
+            </router-link>
           </div>
         </div>
-        <div class="hidden sm:ml-6 sm:flex sm:items-center" v-if="isAuthenticated">
+        <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          <router-link
+            to="/admin/login"
+            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+            v-if="!isAuthenticated && !isAdmin"
+          >
+            Admin Login
+          </router-link>
           <button
             @click="logout"
             class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+            v-if="isAuthenticated || isAdmin"
           >
             Logout
           </button>
@@ -97,7 +113,7 @@
           to="/login"
           class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
           :class="{ 'bg-indigo-50 border-indigo-500 text-indigo-700': $route.path === '/login' }"
-          v-if="!isAuthenticated"
+          v-if="!isAuthenticated && !isAdmin"
         >
           Login
         </router-link>
@@ -105,7 +121,7 @@
           to="/auth/create-account"
           class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
           :class="{ 'bg-indigo-50 border-indigo-500 text-indigo-700': $route.path === '/auth/create-account' }"
-          v-if="!isAuthenticated"
+          v-if="!isAuthenticated && !isAdmin"
         >
           Create Account
         </router-link>
@@ -117,10 +133,25 @@
         >
           Dashboard
         </router-link>
+        <router-link
+          to="/admin/dashboard"
+          class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          :class="{ 'bg-indigo-50 border-indigo-500 text-indigo-700': $route.path === '/admin/dashboard' }"
+          v-if="isAdmin"
+        >
+          Admin Dashboard
+        </router-link>
+        <router-link
+          to="/admin/login"
+          class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          v-if="!isAuthenticated && !isAdmin"
+        >
+          Admin Login
+        </router-link>
         <button
           @click="logout"
           class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium w-full text-left"
-          v-if="isAuthenticated"
+          v-if="isAuthenticated || isAdmin"
         >
           Logout
         </button>
@@ -140,8 +171,13 @@ const isAuthenticated = computed(() => {
   return !!localStorage.getItem('token');
 });
 
+const isAdmin = computed(() => {
+  return !!localStorage.getItem('adminToken');
+});
+
 const logout = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('adminToken');
   router.push('/login');
 };
 </script>
