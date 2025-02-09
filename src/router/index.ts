@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Onboarding from '../views/Onboarding.vue';
 import Login from '../views/auth/Login.vue';
 import BusinessOnboarding from '../views/auth/BusinessOnboarding.vue';
+import CreateAccount from '../views/auth/CreateAccount.vue';
 
 const routes = [
   {
@@ -12,6 +13,14 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/auth/create-account',
+    name: 'CreateAccount',
+    component: CreateAccount,
     meta: {
       requiresAuth: false
     }
